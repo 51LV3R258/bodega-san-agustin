@@ -1,0 +1,7 @@
+{
+  "name": "bodega-san-agustin",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
