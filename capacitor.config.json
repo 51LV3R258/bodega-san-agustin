@@ -1,6 +1,6 @@
 {
   "appId": "com.bodega.san.agustin",
-  "appName": "bodega-san-agustin",
+  "appName": "Bg. San Agustín",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",
@@ -15,7 +15,7 @@
       "androidSplashResourceName": "splash",
       "androidScaleType": "CENTER_CROP",
       "androidSpinnerStyle": "large",
-      "showSpinner": true,
+      "showSpinner": false,
       "spinnerColor": "#3880ff"
     }
   },

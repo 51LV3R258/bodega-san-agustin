@@ -29,3 +29,15 @@ npm-debug.log*
 /platforms
 /plugins
 /www
+resources/android/*
+resources/ios/*
+resources/windows/*
+android/*
+!android/variables.gradle
+!android/app/
+android/app/*
+!android/app/src/
+android/app/src/*
+!android/app/src/main/
+android/app/src/main/*
+!android/app/src/main/AndroidManifest.xml
