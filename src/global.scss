@@ -24,3 +24,20 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+
+
+:root {
+
+    a,
+    button {
+        outline: none;
+    }
+
+    .resize-modal .modal-wrapper {
+        height: 80%;
+        margin-left: 1.5rem;
+        margin-right: 1.5rem;
+        border-radius: 0.8rem;
+    }
+}

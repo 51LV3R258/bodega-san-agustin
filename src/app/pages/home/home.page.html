@@ -1,20 +1,55 @@
-<ion-header [translucent]="true">
+<ion-header translucent class="ion-no-border">
   <ion-toolbar>
-    <ion-title>
-      Blank
+    <ion-title mode="ios">
+      <h4 class="ion-no-margin">Todos los Productos</h4>
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content fullscreen>
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title size="large">Productos</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col size="12" *ngFor="let product of products">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title color="primary">{{product.nombre}}</ion-card-title>
+            <ion-card-subtitle>
+              <ion-text color="dark">
+                Otros nombres:
+              </ion-text> {{product.other_names.join(', ')}}
+            </ion-card-subtitle>
+          </ion-card-header>
+          <div class="scroll-horizontal">
+            <ion-chip *ngFor="let tag of product.tags" color="primary">
+              <ion-label>{{tag.nombre}}</ion-label>
+            </ion-chip>
+          </div>
+          <ion-item *ngFor="let price of product.prices" lines='full'>
+            <b>Precio x {{price.unit.nombre}}:&nbsp;</b>
+            <ng-container *ngIf="price.detalle < 0.1; else elseTemplate">
+              {{1/price.detalle | number:'1.0-2'}} x S/.1
+            </ng-container>
+            <ng-template #elseTemplate> S/. {{price.detalle| number:'1.2-2'}}
+            </ng-template>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <div id="container" *ngIf="noElements">
+      <strong>No hay productos</strong>
+      <p>Empieza a agregarlos</p>
+    </div>
+  </ion-grid>
 </ion-content>
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" routerLink="/product">
+  <ion-fab-button>
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

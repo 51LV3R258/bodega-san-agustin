@@ -9,7 +9,9 @@ export interface Product {
 }
 
 export interface Price {
-	detalle?: string;
+	unit_id?: number;
+	product_id?: number;
+	detalle?: number;
 	unit?: Unit;
 }
 
@@ -25,14 +27,9 @@ export interface Unit {
 export interface NewProduct {
 	nombre?: string;
 	other_names?: string[];
-	imagen?:string;
+	imagen?: string;
 	tag_ids?: number[];
-	prices?: NewPrice[];
-}
-
-export interface NewPrice {
-	unit_id: number;
-	detalle: number;
+	prices?: Price[];
 }
 
 export interface Segment {
