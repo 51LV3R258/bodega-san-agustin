@@ -3,12 +3,15 @@ import { Platform, IonRouterOutlet, AlertController } from '@ionic/angular';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Plugins } from '@capacitor/core';
 import { Router } from '@angular/router';
+import { UnitService } from './services/unit.service';
+import { TagService } from './services/tag.service';
 const { SplashScreen, App } = Plugins;
 
 @Component({
 	selector: 'app-root',
 	templateUrl: 'app.component.html',
-	styleUrls: [ 'app.component.scss' ]
+	styleUrls: [ 'app.component.scss' ],
+	providers: [ UnitService, TagService ]
 })
 export class AppComponent {
 	@ViewChild(IonRouterOutlet, { static: false })
@@ -17,7 +20,9 @@ export class AppComponent {
 		private router: Router,
 		private platform: Platform,
 		private statusBar: StatusBar,
-		private alertCtrl: AlertController
+		private alertCtrl: AlertController,
+		private unitService: UnitService,
+		private tagService: TagService
 	) {
 		this.initializeApp();
 	}
@@ -41,7 +46,7 @@ export class AppComponent {
 		});
 		await alert.present();
 	}
-	initializeApp() {
+	async initializeApp() {
 		this.platform.ready().then(async () => {
 			SplashScreen.hide().catch((error) => {
 				console.warn(error);
@@ -60,5 +65,7 @@ export class AppComponent {
 				}
 			});
 		});
+		await this.unitService.indexAndStore();
+		await this.tagService.indexAndStore();
 	}
 }

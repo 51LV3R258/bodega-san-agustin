@@ -21,4 +21,9 @@ export class HomePage {
 		this.products = products;
 		this.noElements = products.length === 0;
 	}
+
+	async refreshProducts(event) {
+		await this.getProducts();
+		event.target.complete();
+	}
 }

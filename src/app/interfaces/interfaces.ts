@@ -5,10 +5,13 @@ export interface Product {
 	imagen?: null;
 	status?: boolean;
 	tags?: Tag[];
-	prices?: Price[];
+	sale_prices?: SalePrice[];
+	unit_id?: number;
+	purchase_price?: number;
+	unit?: Unit;
 }
 
-export interface Price {
+export interface SalePrice {
 	unit_id?: number;
 	product_id?: number;
 	detalle?: number;
@@ -18,10 +21,12 @@ export interface Price {
 export interface Tag {
 	id?: number;
 	nombre?: string;
+	isChecked: boolean;
 }
 export interface Unit {
 	id?: number;
 	nombre?: string;
+	isChecked?: boolean;
 }
 
 export interface NewProduct {
@@ -29,7 +34,9 @@ export interface NewProduct {
 	other_names?: string[];
 	imagen?: string;
 	tag_ids?: number[];
-	prices?: Price[];
+	sale_prices?: SalePrice[];
+	unit_id?: number;
+	purchase_price?: number;
 }
 
 export interface Segment {

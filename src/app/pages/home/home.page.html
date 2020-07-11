@@ -7,6 +7,10 @@
 </ion-header>
 
 <ion-content fullscreen>
+  <ion-refresher slot="fixed" (ionRefresh)="refreshProducts($event)">
+    <ion-refresher-content refreshingSpinner="circular">
+    </ion-refresher-content>
+  </ion-refresher>
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Productos</ion-title>
@@ -15,11 +19,11 @@
 
   <ion-grid fixed>
     <ion-row>
-      <ion-col size="12" *ngFor="let product of products">
+      <ion-col size-xl="4" size-md="6" size="12" *ngFor="let product of products">
         <ion-card>
           <ion-card-header>
             <ion-card-title color="primary">{{product.nombre}}</ion-card-title>
-            <ion-card-subtitle>
+            <ion-card-subtitle *ngIf="product.other_names.length>0">
               <ion-text color="dark">
                 Otros nombres:
               </ion-text> {{product.other_names.join(', ')}}
@@ -30,12 +34,12 @@
               <ion-label>{{tag.nombre}}</ion-label>
             </ion-chip>
           </div>
-          <ion-item *ngFor="let price of product.prices" lines='full'>
-            <b>Precio x {{price.unit.nombre}}:&nbsp;</b>
-            <ng-container *ngIf="price.detalle < 0.1; else elseTemplate">
-              {{1/price.detalle | number:'1.0-2'}} x S/.1
+          <ion-item *ngFor="let sale_price of product.sale_prices" lines='full'>
+            <b>Precio de venta x {{sale_price.unit.nombre}}:&nbsp;</b>
+            <ng-container *ngIf="sale_price.detalle < 0.1; else elseTemplate">
+              {{1/sale_price.detalle | number:'1.0-2'}} x S/.1
             </ng-container>
-            <ng-template #elseTemplate> S/. {{price.detalle| number:'1.2-2'}}
+            <ng-template #elseTemplate> S/. {{sale_price.detalle| number:'1.2-2'}}
             </ng-template>
           </ion-item>
         </ion-card>

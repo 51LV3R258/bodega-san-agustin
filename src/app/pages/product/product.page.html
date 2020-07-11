@@ -1,0 +1,132 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="ion-no-padding">Nuevo Producto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid style="height: 100%;">
+    <form #productForm="ngForm" (ngSubmit)="logForm()">
+      <!-- Nombre de producto -->
+      <ion-row class="ion-justify-content-center">
+        <ion-item class="element-mod-width">
+          <ion-label position="floating" class="label-mod">Nombre<ion-text color="danger">*</ion-text>
+          </ion-label>
+          <ion-input #nombre name="nombre" type="text" inputmode="text" maxlength="50" [(ngModel)]="product.nombre"
+            required>
+          </ion-input>
+        </ion-item>
+      </ion-row>
+      <!-- Precio(s) de venta -->
+      <ion-row class="ion-justify-content-center">
+        <ion-card class="element-mod-width" style="box-shadow: none;margin-bottom: 0;">
+          <ion-item lines="none">
+            <ion-label>Precio(s) de venta<ion-text color="danger">*</ion-text>
+            </ion-label>
+            <ion-button expand="block" fill="outline" color="secondary" (click)="openModalSelectSalePrices()">
+              Agregar
+            </ion-button>
+          </ion-item>
+          <ng-container *ngIf="product.sale_prices.length>0">
+            <ng-container *ngFor="let unit of units">
+              <ion-item *ngIf="unit.isChecked">
+                Precio x {{unit.nombre}}:&nbsp;
+                <ng-container *ngIf="priceDetail(unit.id) < 0.1; else elseTemplate">
+                  {{1/priceDetail(unit.id) | number:'1.0-2'}} x S/.1
+                </ng-container>
+                <ng-template #elseTemplate> S/. {{priceDetail(unit.id)| number:'1.2-2'}}
+                </ng-template>
+
+                <ion-buttons slot="end">
+                  <ion-button (click)="removeUnit(unit)">
+                    <ion-icon color="danger" slot="icon-only" name="remove-circle-outline">
+                    </ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ion-item>
+            </ng-container>
+          </ng-container>
+        </ion-card>
+      </ion-row>
+      <!-- Otros nombres -->
+      <ion-row class="ion-justify-content-center">
+        <ion-card class="element-mod-width" style="box-shadow: none; margin-bottom: 0;">
+          <ion-item lines="none">
+            <ion-label>Otros Nombres</ion-label>
+            <ion-button expand="block" fill="outline" color="primary" (click)="openAlertOtherNames()">
+              Agregar
+            </ion-button>
+          </ion-item>
+          <ng-container *ngIf="product.other_names.length>0">
+            <ion-chip color="primary" outline *ngFor="let other_name of product.other_names; let i = index">
+              <ion-text>
+                {{other_name}}
+              </ion-text>
+              <ion-icon (click)="removeOtherName(i)" name="remove-circle-outline" color='danger'>
+              </ion-icon>
+            </ion-chip>
+          </ng-container>
+        </ion-card>
+      </ion-row>
+      <!-- Tags de productos -->
+      <ion-row class="ion-justify-content-center">
+        <ion-card class="element-mod-width" style="box-shadow: none;margin-bottom: 0;">
+          <ion-item lines="none">
+            <ion-label>Tag(s)</ion-label>
+            <ion-button expand="block" fill="outline" color="tertiary" (click)="openModalSelectTags()">
+              Agregar
+            </ion-button>
+          </ion-item>
+          <ng-container *ngFor="let tag of tags">
+            <ion-chip color="tertiary" outline *ngIf="tag.isChecked">
+              <ion-text>
+                {{tag.nombre}}
+              </ion-text>
+              <ion-icon (click)="removeTag(tag)" name="remove-circle-outline" color='danger'>
+              </ion-icon>
+            </ion-chip>
+          </ng-container>
+        </ion-card>
+      </ion-row>
+      <!-- Precio de compra -->
+      <ion-row class="ion-justify-content-center ion-margin-top">
+        <div class="element-mod-width ion-padding-start" ngClass="">
+          <ion-label #label_purchase_price>¿Cuanto costó?
+          </ion-label>
+        </div>
+      </ion-row>
+      <ion-row class="ion-justify-content-center ">
+        <ion-item class="element-mod-width">
+          <ion-text color="medium">
+            S/.&nbsp;
+          </ion-text>
+          <ion-input placeholder="0.00" (ionFocus)="colorize(label_purchase_price,true)"
+            (ionBlur)="colorize(label_purchase_price,false)" #purchase_price name="purchase_price"
+            [(ngModel)]="product.purchase_price" autocomplete="transaction-amount" inputmode="decimal" min="0"
+            max="9999" step="0.5" type="number">
+          </ion-input>
+          <ion-text color="medium">
+            x
+          </ion-text>
+          <ion-select [compareWith]="compareWith" [interfaceOptions]="customPopoverOptions" interface="popover"
+            placeholder="Escoge unidades">
+            <ion-select-option *ngFor="let unit of units" [value]="unit.id">{{unit.nombre}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-row>
+      <!-- Botón para confirmar -->
+      <ion-row class="ion-justify-content-center">
+        <ion-button class="element-mod-width" style="margin-top: 30px;" type="submit"
+          [disabled]="productForm.invalid || product.sale_prices.length<1"
+          [color]="productForm.invalid || product.sale_prices.length<1 ? 'medium' : 'tertiary'" expand="block"
+          fill="outline">
+          Guardar
+        </ion-button>
+      </ion-row>
+    </form>
+  </ion-grid>
+
+</ion-content>

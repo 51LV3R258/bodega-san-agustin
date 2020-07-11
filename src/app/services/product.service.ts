@@ -59,8 +59,12 @@ export class ProductService {
 					resolve({ ok: this.ok, error: response['error'] });
 				},
 				(error) => {
-					console.log(error);
-					resolve({ ok: this.ok, error: 'Error al guardar producto' });
+					// console.log(error);
+					let errorMessage = 'Ha ocurrido algún error al actualizar el producto, intentalo luego';
+					if (error['error'].hasOwnProperty('firstError')) {
+						errorMessage = error['error']['firstError'];
+					}
+					resolve({ ok: this.ok, error: errorMessage });
 				}
 			);
 		});
@@ -79,8 +83,12 @@ export class ProductService {
 					resolve({ ok: this.ok, error: response['error'] });
 				},
 				(error) => {
-					console.log(error);
-					resolve({ ok: this.ok, error: 'Error al guardar producto' });
+					// console.log(error['error']);
+					let errorMessage = 'Ha ocurrido algún error al guardar el producto, intentalo luego';
+					if (error['error'].hasOwnProperty('firstError')) {
+						errorMessage = error['error']['firstError'];
+					}
+					resolve({ ok: this.ok, error: errorMessage });
 				}
 			);
 		});
