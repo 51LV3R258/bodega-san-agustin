@@ -1,11 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { Platform, IonRouterOutlet, AlertController } from '@ionic/angular';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { Plugins } from '@capacitor/core';
+import { Plugins, StatusBarStyle } from '@capacitor/core';
 import { Router } from '@angular/router';
 import { UnitService } from './services/unit.service';
 import { TagService } from './services/tag.service';
-const { SplashScreen, App } = Plugins;
+const { SplashScreen, App, StatusBar } = Plugins;
 
 @Component({
 	selector: 'app-root',
@@ -19,7 +18,6 @@ export class AppComponent {
 	constructor(
 		private router: Router,
 		private platform: Platform,
-		private statusBar: StatusBar,
 		private alertCtrl: AlertController,
 		private unitService: UnitService,
 		private tagService: TagService
@@ -51,9 +49,7 @@ export class AppComponent {
 			SplashScreen.hide().catch((error) => {
 				console.warn(error);
 			});
-			if ((this.platform.is('android') || this.platform.is('ios')) && this.platform.is('hybrid')) {
-				this.statusBar.styleDefault();
-			}
+			this.checkDarkMode();
 			this.platform.backButton.subscribeWithPriority(0, async () => {
 				if (this.router.url === '/home') {
 					this.presentAlertConfirm();
@@ -67,5 +63,29 @@ export class AppComponent {
 		});
 		await this.unitService.indexAndStore();
 		await this.tagService.indexAndStore();
+	}
+
+	checkDarkMode() {
+		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+		if (prefersDark.matches) {
+			document.body.classList.add('dark');
+			StatusBar.setBackgroundColor({
+				color: '#000000'
+			}).catch((error) => {
+				console.warn(error);
+			});
+		} else {
+			StatusBar.setBackgroundColor({
+				color: '#ffffff'
+			}).catch((error) => {
+				console.warn(error);
+			});
+		}
+
+		StatusBar.setStyle({
+			style: prefersDark.matches ? StatusBarStyle.Dark : StatusBarStyle.Light
+		}).catch((error) => {
+			console.warn(error);
+		});
 	}
 }

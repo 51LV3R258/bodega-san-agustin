@@ -13,13 +13,26 @@ export class GeneralService {
 			duration: 2500
 		});
 		toast.present();
-  }
-
-	loading: any;
+	}
 	async presentLoadingInfinite() {
-		this.loading = await this.loadingCtrl.create({
+		const loading = await this.loadingCtrl.create({
 			message: 'Espere...'
 		});
-		await this.loading.present();
+		await loading.present();
+	}
+
+	async dismissLoading() {
+		await this.loadingCtrl.dismiss();
+	}
+
+	async presentToastInfinite(message: string) {
+		const toast = await this.toastCtrl.create({
+			message: message
+		});
+		toast.present();
+	}
+
+	async dismissToast() {
+		await this.toastCtrl.dismiss();
 	}
 }

@@ -211,7 +211,7 @@ export class ProductPage {
 			res = await this.productService.store(this.product);
 		}
 
-		await this.generalService.loading.dismiss();
+		await this.generalService.dismissLoading();
 
 		if (res.ok) {
 			this.router.navigateByUrl('/home');
@@ -237,7 +237,7 @@ export class ProductPage {
 						await this.generalService.presentLoadingInfinite();
 						const res = await this.productService.delete(this.product_id);
 
-						await this.generalService.loading.dismiss();
+						await this.generalService.dismissLoading();
 
 						if (res.ok) {
 							this.router.navigateByUrl('/home');

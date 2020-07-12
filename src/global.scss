@@ -30,7 +30,8 @@
 :root {
 
     a,
-    button {
+    button,
+    ion-fab {
         outline: none;
     }
 
@@ -39,5 +40,13 @@
         margin-left: 1.5rem;
         margin-right: 1.5rem;
         border-radius: 0.8rem;
+    }
+
+
+}
+
+html.ios {
+    ion-searchbar {
+        padding-top: 15px;
     }
 }

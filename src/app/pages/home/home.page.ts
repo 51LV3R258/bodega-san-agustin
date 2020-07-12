@@ -3,18 +3,22 @@ import { ProductService } from '../../services/product.service';
 import { Product } from '../../interfaces/interfaces';
 import { Router, NavigationExtras } from '@angular/router';
 import { GeneralService } from '../../services/general.service';
+import { TagService } from '../../services/tag.service';
+import { UnitService } from '../../services/unit.service';
 
 @Component({
 	selector: 'app-home',
 	templateUrl: 'home.page.html',
 	styleUrls: [ 'home.page.scss' ],
-	providers: [ ProductService, GeneralService ]
+	providers: [ ProductService, GeneralService, TagService, UnitService ]
 })
 export class HomePage {
 	constructor(
 		public productService: ProductService,
 		private router: Router,
-		private generalService: GeneralService
+		private generalService: GeneralService,
+		private tagService: TagService,
+		private unitService: UnitService
 	) {}
 	products: Product[] = [];
 	noElements = false;
@@ -29,14 +33,15 @@ export class HomePage {
 	}
 
 	async refreshProducts(event) {
-		await this.getProducts();
+		// await this.getProducts();
+		await Promise.all([ this.getProducts(), this.unitService.indexAndStore(), this.tagService.indexAndStore() ]);
 		event.target.complete();
 	}
 
 	async toEditProduct(product_id) {
-		await this.generalService.presentLoadingInfinite();
+		await this.generalService.presentToastInfinite('Cargando producto');
 		const res = await this.productService.show(product_id);
-		await this.generalService.loading.dismiss();
+		await this.generalService.dismissToast();
 
 		if (res.ok) {
 			let navigationExtras: NavigationExtras = {
