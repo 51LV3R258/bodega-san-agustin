@@ -1,26 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { TagService } from '../../services/tag.service';
 import { ProductService } from '../../services/product.service';
 import { UnitService } from '../../services/unit.service';
-import { ModalController, AlertController, IonLabel, LoadingController, ToastController } from '@ionic/angular';
-import { NewProduct, SalePrice, Unit, Tag } from '../../interfaces/interfaces';
+import { ModalController, AlertController, IonLabel, IonSelect } from '@ionic/angular';
+import { NewProduct, SalePrice, Unit, Tag, Product } from '../../interfaces/interfaces';
 import { SelectTagsPage } from '../../modals/select-tags/select-tags.page';
 import { SelectSalePricesPage } from '../../modals/select-sale-prices/select-sale-prices.page';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { GeneralService } from '../../services/general.service';
 
 @Component({
 	selector: 'app-product',
 	templateUrl: './product.page.html',
 	styleUrls: [ './product.page.scss' ],
-	providers: [ TagService, ProductService, UnitService ]
+	providers: [ TagService, ProductService, UnitService, GeneralService ]
 })
 export class ProductPage {
+	@ViewChild('select_unit', { static: true })
+	ionSelect: IonSelect;
 	prices: SalePrice[] = [];
 	product: NewProduct;
 	units: Unit[];
 	tags: Tag[];
+	isWillUpdate = false;
+	product_id = null;
 
-	clearData() {
+	storeProduct() {
 		this.prices = [];
 		this.product = {
 			nombre: '',
@@ -41,21 +46,66 @@ export class ProductPage {
 		private unitService: UnitService,
 		private modalCtrl: ModalController,
 		private alertCtrl: AlertController,
-		public loadingController: LoadingController,
 		private router: Router,
-		private toastCtrl: ToastController
+		private generalService: GeneralService,
+		private route: ActivatedRoute
 	) {
-		this.clearData();
+		this.storeProduct();
 		this.unitService.load();
 		this.tagService.load();
+		this.route.queryParams.subscribe(async () => {
+			if (this.router.getCurrentNavigation().extras.state) {
+				const { product } = this.router.getCurrentNavigation().extras.state;
+				this.isWillUpdate = true;
+				this.updateProduct(product);
+			}
+		});
+	}
+
+	updateProduct(productToUpdate: Product) {
+		this.product_id = productToUpdate.id;
+
+		let unit_id = null;
+		if (productToUpdate.unit) {
+			unit_id = productToUpdate.unit.id;
+		}
+
+		this.product = {
+			nombre: productToUpdate.nombre,
+			imagen: productToUpdate.imagen,
+			other_names: productToUpdate.other_names,
+			sale_prices: productToUpdate.sale_prices.map((sale_prices) => {
+				return {
+					unit_id: sale_prices.unit.id,
+					detalle: sale_prices.detalle
+				};
+			}),
+			tag_ids: productToUpdate.tags.map((tag) => tag.id),
+
+			purchase_price: productToUpdate.purchase_price,
+			unit_id: unit_id
+		};
 	}
 
 	ionViewWillEnter() {
 		this.unitService.units$.subscribe((units) => {
 			this.units = units;
+			if (this.isWillUpdate) {
+				this.units.forEach((unit) => {
+					unit.isChecked = this.product.sale_prices.some((sale_price) => sale_price.unit_id === unit.id);
+				});
+				if (this.units.length > 0) {
+					this.ionSelect.value = this.product.unit_id;
+				}
+			}
 		});
 		this.tagService.tags$.subscribe((tags) => {
 			this.tags = tags;
+			if (this.isWillUpdate) {
+				this.tags.forEach((tag) => {
+					tag.isChecked = this.product.tag_ids.some((tag_id) => tag_id === tag.id);
+				});
+			}
 		});
 	}
 
@@ -138,12 +188,6 @@ export class ProductPage {
 		subHeader: 'Selecciona las unidades de costo'
 	};
 
-	compareWithFn = (o1: number, o2: number) => {
-		this.product.unit_id = o2;
-		return o1 === o2;
-	};
-	compareWith = this.compareWithFn;
-
 	priceDetail(unit_id: number) {
 		const sale_price = this.product.sale_prices.find((sale_price) => sale_price.unit_id === unit_id);
 		if (sale_price) {
@@ -157,32 +201,58 @@ export class ProductPage {
 		unit.isChecked = false;
 	}
 
-	loading: any;
-	async presentLoadingInfinite() {
-		this.loading = await this.loadingController.create({
-			message: 'Espere...'
-		});
-		await this.loading.present();
-	}
-	async logForm() {
-		await this.presentLoadingInfinite();
-		const res = await this.productService.store(this.product);
+	async submitForm() {
+		await this.generalService.presentLoadingInfinite();
 
-		await this.loading.dismiss();
+		let res: any;
+		if (this.isWillUpdate) {
+			res = await this.productService.update(this.product, this.product_id);
+		} else {
+			res = await this.productService.store(this.product);
+		}
+
+		await this.generalService.loading.dismiss();
 
 		if (res.ok) {
 			this.router.navigateByUrl('/home');
-			this.presentToast(res.message);
+			this.generalService.presentToast(res.message);
 		} else {
-			this.presentToast(res.error);
+			this.generalService.presentToast(res.error);
 		}
 	}
 
-	async presentToast(message: string) {
-		const toast = await this.toastCtrl.create({
-			message: message,
-			duration: 2500
+	async presentAlertConfirmDelete() {
+		const alert = await this.alertCtrl.create({
+			header: 'Eliminar producto',
+			message: `¿Esta seguro que desea borrar el producto ${this.product.nombre}?`,
+			buttons: [
+				{
+					text: 'Cancelar',
+					role: 'cancel',
+					cssClass: 'secondary'
+				},
+				{
+					text: 'Confirmar',
+					handler: async () => {
+						await this.generalService.presentLoadingInfinite();
+						const res = await this.productService.delete(this.product_id);
+
+						await this.generalService.loading.dismiss();
+
+						if (res.ok) {
+							this.router.navigateByUrl('/home');
+							this.generalService.presentToast(res.message);
+						} else {
+							this.generalService.presentToast(res.error);
+						}
+					}
+				}
+			]
 		});
-		toast.present();
+		await alert.present();
+	}
+
+	toggleUnit(event: CustomEvent) {
+		this.product.unit_id = event.detail.value;
 	}
 }

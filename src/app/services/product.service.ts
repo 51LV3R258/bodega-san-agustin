@@ -7,7 +7,6 @@ const URL = environment.url;
 	providedIn: 'root'
 })
 export class ProductService {
-	ok = false;
 	constructor(private http: HttpClient) {}
 
 	async index(status?: boolean, tags?: number[], units?: number[]): Promise<{ ok: boolean; products: Product[] }> {
@@ -24,6 +23,7 @@ export class ProductService {
 		}
 
 		return new Promise((resolve) => {
+			let ok = false;
 			let products: Product[] = [];
 			this.http
 				.get(`${URL}/product`, {
@@ -34,13 +34,13 @@ export class ProductService {
 					async (response) => {
 						if (response['code'] === 200) {
 							products = response['products'];
-							this.ok = true;
+							ok = true;
 						}
-						resolve({ ok: this.ok, products: products });
+						resolve({ ok: ok, products: products });
 					},
 					(error) => {
 						console.log(error);
-						resolve({ ok: this.ok, products: products });
+						resolve({ ok: ok, products: products });
 					}
 				);
 		});
@@ -50,13 +50,14 @@ export class ProductService {
 		let headers = new HttpHeaders().set('Content-Type', 'application/json');
 
 		return new Promise((resolve) => {
+			let ok = false;
 			this.http.put(`${URL}/product/${id}`, newProduct, { headers: headers }).subscribe(
 				(response) => {
 					if (response['code'] === 200) {
-						this.ok = true;
-						resolve({ ok: this.ok, message: response['message'] });
+						ok = true;
+						resolve({ ok: ok, message: response['message'] });
 					}
-					resolve({ ok: this.ok, error: response['error'] });
+					resolve({ ok: ok, error: response['error'] });
 				},
 				(error) => {
 					// console.log(error);
@@ -64,7 +65,7 @@ export class ProductService {
 					if (error['error'].hasOwnProperty('firstError')) {
 						errorMessage = error['error']['firstError'];
 					}
-					resolve({ ok: this.ok, error: errorMessage });
+					resolve({ ok: ok, error: errorMessage });
 				}
 			);
 		});
@@ -74,13 +75,14 @@ export class ProductService {
 		let headers = new HttpHeaders().set('Content-Type', 'application/json');
 
 		return new Promise((resolve) => {
+			let ok = false;
 			this.http.post(`${URL}/product`, newProduct, { headers: headers }).subscribe(
 				(response) => {
 					if (response['code'] === 200) {
-						this.ok = true;
-						resolve({ ok: this.ok, message: response['message'] });
+						ok = true;
+						resolve({ ok: ok, message: response['message'] });
 					}
-					resolve({ ok: this.ok, error: response['error'] });
+					resolve({ ok: ok, error: response['error'] });
 				},
 				(error) => {
 					// console.log(error['error']);
@@ -88,7 +90,7 @@ export class ProductService {
 					if (error['error'].hasOwnProperty('firstError')) {
 						errorMessage = error['error']['firstError'];
 					}
-					resolve({ ok: this.ok, error: errorMessage });
+					resolve({ ok: ok, error: errorMessage });
 				}
 			);
 		});
@@ -98,17 +100,18 @@ export class ProductService {
 		let headers = new HttpHeaders().set('Content-Type', 'application/json');
 
 		return new Promise((resolve) => {
+			let ok = false;
 			this.http.delete(`${URL}/product/${id}`, { headers: headers }).subscribe(
 				(response) => {
 					if (response['code'] === 200) {
-						this.ok = true;
-						resolve({ ok: this.ok, message: response['message'] });
+						ok = true;
+						resolve({ ok: ok, message: response['message'] });
 					}
-					resolve({ ok: this.ok, error: response['error'] });
+					resolve({ ok: ok, error: response['error'] });
 				},
 				(error) => {
 					console.log(error);
-					resolve({ ok: this.ok, error: 'Error al eliminar producto' });
+					resolve({ ok: ok, error: 'Error al eliminar producto' });
 				}
 			);
 		});
@@ -118,6 +121,7 @@ export class ProductService {
 		let headers = new HttpHeaders().set('Content-Type', 'application/json');
 		let params = new HttpParams().set('query', query);
 		return new Promise((resolve) => {
+			let ok = false;
 			this.http
 				.get(`${URL}/product`, {
 					params: params,
@@ -127,14 +131,41 @@ export class ProductService {
 					async (response) => {
 						if (response['code'] === 200) {
 							const segment: SegmentProduct = response['products'];
-							this.ok = true;
-							resolve({ ok: this.ok, segment: segment });
+							ok = true;
+							resolve({ ok: ok, segment: segment });
 						}
-						resolve({ ok: this.ok, error: response['error'] });
+						resolve({ ok: ok, error: response['error'] });
 					},
 					(error) => {
 						console.log(error);
-						resolve({ ok: this.ok, error: 'Error en la búsqueda' });
+						resolve({ ok: ok, error: 'Error en la búsqueda' });
+					}
+				);
+		});
+	}
+
+	async show(product_id: number): Promise<{ ok: boolean; product?: Product; error?: any }> {
+		let headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+		return new Promise((resolve) => {
+			let ok = false;
+			let product: Product = null;
+			this.http
+				.get(`${URL}/product/${product_id}`, {
+					headers: headers
+				})
+				.subscribe(
+					async (response) => {
+						if (response['code'] === 200) {
+							product = response['product'];
+							ok = true;
+							resolve({ ok: ok, product: product });
+						}
+						resolve({ ok: ok, error: 'Ha ocurrido un error al buscar el producto' });
+					},
+					(error) => {
+						console.log(error);
+						resolve({ ok: ok, error: error['error']['error'] });
 					}
 				);
 		});

@@ -6,3 +6,7 @@
 ion-label.label-mod {
     padding-top: 0.5rem;
 }
+
+ion-item.invalid {
+    --highlight-color-valid: var(--ion-color-danger);
+}

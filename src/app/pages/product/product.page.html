@@ -3,13 +3,19 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="home"></ion-back-button>
     </ion-buttons>
-    <ion-title class="ion-no-padding">Nuevo Producto</ion-title>
+    <ion-title class="ion-no-padding">{{isWillUpdate ?  'Actualizar Producto' : 'Guardar Producto' }}</ion-title>
+    <!-- Botón para eliminar -->
+    <ion-buttons slot="end" *ngIf="isWillUpdate">
+      <ion-button color="danger" (click)="presentAlertConfirmDelete()">
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-grid style="height: 100%;">
-    <form #productForm="ngForm" (ngSubmit)="logForm()">
+    <form #productForm="ngForm" (ngSubmit)="submitForm()">
       <!-- Nombre de producto -->
       <ion-row class="ion-justify-content-center">
         <ion-item class="element-mod-width">
@@ -27,7 +33,7 @@
             <ion-label>Precio(s) de venta<ion-text color="danger">*</ion-text>
             </ion-label>
             <ion-button expand="block" fill="outline" color="secondary" (click)="openModalSelectSalePrices()">
-              Agregar
+              Editar
             </ion-button>
           </ion-item>
           <ng-container *ngIf="product.sale_prices.length>0">
@@ -57,7 +63,7 @@
           <ion-item lines="none">
             <ion-label>Otros Nombres</ion-label>
             <ion-button expand="block" fill="outline" color="primary" (click)="openAlertOtherNames()">
-              Agregar
+              Editar
             </ion-button>
           </ion-item>
           <ng-container *ngIf="product.other_names.length>0">
@@ -77,7 +83,7 @@
           <ion-item lines="none">
             <ion-label>Tag(s)</ion-label>
             <ion-button expand="block" fill="outline" color="tertiary" (click)="openModalSelectTags()">
-              Agregar
+              Editar
             </ion-button>
           </ion-item>
           <ng-container *ngFor="let tag of tags">
@@ -93,13 +99,13 @@
       </ion-row>
       <!-- Precio de compra -->
       <ion-row class="ion-justify-content-center ion-margin-top">
-        <div class="element-mod-width ion-padding-start" ngClass="">
+        <div class="element-mod-width ion-padding-start">
           <ion-label #label_purchase_price>¿Cuanto costó?
           </ion-label>
         </div>
       </ion-row>
       <ion-row class="ion-justify-content-center ">
-        <ion-item class="element-mod-width">
+        <ion-item class="element-mod-width" [class.invalid]="!select_unit.value">
           <ion-text color="medium">
             S/.&nbsp;
           </ion-text>
@@ -111,8 +117,8 @@
           <ion-text color="medium">
             x
           </ion-text>
-          <ion-select [compareWith]="compareWith" [interfaceOptions]="customPopoverOptions" interface="popover"
-            placeholder="Escoge unidades">
+          <ion-select #select_unit (ionChange)="toggleUnit($event)" [interfaceOptions]="customPopoverOptions"
+            interface="popover" placeholder="Escoge unidades">
             <ion-select-option *ngFor="let unit of units" [value]="unit.id">{{unit.nombre}}</ion-select-option>
           </ion-select>
         </ion-item>
@@ -123,7 +129,7 @@
           [disabled]="productForm.invalid || product.sale_prices.length<1"
           [color]="productForm.invalid || product.sale_prices.length<1 ? 'medium' : 'tertiary'" expand="block"
           fill="outline">
-          Guardar
+          {{isWillUpdate ? 'Actualizar': 'Guardar'}}
         </ion-button>
       </ion-row>
     </form>
