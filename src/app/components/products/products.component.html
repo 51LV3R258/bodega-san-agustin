@@ -1,3 +1,6 @@
+<div style="width: 100%; height:4px;">
+  <ion-progress-bar *ngIf="loading" color="primary" type="indeterminate"></ion-progress-bar>
+</div>
 <ion-grid fixed>
   <ion-row>
     <ion-col size-xl="4" size-md="6" size="12" *ngFor="let product of products">
@@ -41,8 +44,5 @@
   <div class="container" *ngIf="noElements">
     <strong>No hay productos</strong>
     <p>{{noElementsDetail}}</p>
-  </div>
-  <div class="container" *ngIf="loading">
-    <ion-spinner name="crescent"></ion-spinner>
   </div>
 </ion-grid>

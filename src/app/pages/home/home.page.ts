@@ -27,9 +27,7 @@ export class HomePage {
 	}
 	loading = false;
 	async getProducts() {
-		if (this.products.length === 0) {
-			this.loading = true;
-		}
+		this.loading = true;
 		const { products } = await this.productService.index(null, this.tag_ids, this.unit_ids);
 		this.loading = false;
 		this.products = products;
