@@ -13,10 +13,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 //Importar Modulo para Storage
 import { IonicStorageModule } from '@ionic/storage';
+import { ProductsModule } from './components/products/products.module';
 @NgModule({
 	declarations: [ AppComponent ],
 	entryComponents: [],
 	imports: [
+		ProductsModule,
 		IonicStorageModule.forRoot({
 			name: '__bg-san-agustin',
 			//IOS en prueba de navegador no esta usando indexeddb en vez de eso usa localstorage

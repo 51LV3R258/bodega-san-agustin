@@ -72,20 +72,20 @@ export class AppComponent {
 			StatusBar.setBackgroundColor({
 				color: '#000000'
 			}).catch((error) => {
-				console.warn(error);
+				// console.warn(error);
 			});
 		} else {
 			StatusBar.setBackgroundColor({
 				color: '#ffffff'
 			}).catch((error) => {
-				console.warn(error);
+				// console.warn(error);
 			});
 		}
 
 		StatusBar.setStyle({
 			style: prefersDark.matches ? StatusBarStyle.Dark : StatusBarStyle.Light
 		}).catch((error) => {
-			console.warn(error);
+			// console.warn(error);
 		});
 	}
 }
