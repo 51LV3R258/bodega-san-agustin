@@ -10,12 +10,12 @@
 </ion-header>
 
 <ion-content fullscreen>
-  <ion-list class="ion-margin">
+  <div class="ion-margin">
     <ion-chip class="t-color" *ngFor="let tag of tags" (click)="toggleTag(tag)" [outline]="!tag.isChecked"
       [class.tertiary-color]="tag.isChecked">
       <ion-label>{{tag.nombre}}</ion-label>
     </ion-chip>
-  </ion-list>
+  </div>
 </ion-content>
 
 <ion-footer>
