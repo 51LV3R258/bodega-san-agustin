@@ -13,7 +13,7 @@
   <ion-list>
     <ng-container *ngFor="let unit of units">
       <ion-item lines="full">
-        <ion-checkbox slot="start" [(ngModel)]="unit.isChecked" color="secondary"></ion-checkbox>
+        <ion-toggle [(ngModel)]="unit.isChecked" color="secondary"></ion-toggle>
         <ion-label>{{unit.nombre}}</ion-label>
       </ion-item>
       <ion-item [class.ion-hide]="!unit.isChecked" class="ion-padding-horizontal">
