@@ -66,7 +66,13 @@ export class AppComponent {
 
 	checkDarkMode() {
 		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-		if (prefersDark.matches) {
+		let dark = false;
+		if (window.navigator.userAgent.includes('AndroidDarkMode')) {
+			dark = true;
+		} else {
+			dark = prefersDark.matches;
+		}
+		if (dark) {
 			document.body.classList.add('dark');
 			StatusBar.setBackgroundColor({
 				color: '#000000'
@@ -82,7 +88,7 @@ export class AppComponent {
 		}
 
 		StatusBar.setStyle({
-			style: prefersDark.matches ? StatusBarStyle.Dark : StatusBarStyle.Light
+			style: dark ? StatusBarStyle.Dark : StatusBarStyle.Light
 		}).catch((error) => {
 			// console.warn(error);
 		});

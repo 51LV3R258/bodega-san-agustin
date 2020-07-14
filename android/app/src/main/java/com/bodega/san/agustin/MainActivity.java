@@ -20,4 +20,17 @@ public class MainActivity extends BridgeActivity {
       // Ex: add(TotallyAwesomePlugin.class);
     }});
   }
+
+  @Override
+  public void onStart() {
+    super.onStart();
+    // Android fix for enabling dark mode
+    int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+    WebSettings webSettings = this.bridge.getWebView().getSettings();
+    if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
+      String userAgent = webSettings.getUserAgentString();
+      userAgent = userAgent + " AndroidDarkMode";
+      webSettings.setUserAgentString(userAgent);
+    }
+  }
 }
