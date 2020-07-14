@@ -14,6 +14,7 @@ export class ProductsComponent implements OnInit {
 	@Input() noElements: boolean;
 	@Input() products: Product[];
 	@Input() noElementsDetail : string;
+	@Input() loading: boolean;
 	constructor(
 		private generalService: GeneralService,
 		private productService: ProductService,

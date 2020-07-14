@@ -38,8 +38,11 @@
       </ion-card>
     </ion-col>
   </ion-row>
-  <div id="container" *ngIf="noElements">
+  <div class="container" *ngIf="noElements">
     <strong>No hay productos</strong>
     <p>{{noElementsDetail}}</p>
+  </div>
+  <div class="container" *ngIf="loading">
+    <ion-spinner name="crescent"></ion-spinner>
   </div>
 </ion-grid>

@@ -1,0 +1,11 @@
+ion-chip.s-color {
+
+    --color: var(--ion-color-secondary);
+    border-color: var(--ion-color-secondary);
+
+    &.secondary-color {
+        --background: var(--ion-color-secondary);
+        --color: var(--ion-color-light);
+    }
+
+}

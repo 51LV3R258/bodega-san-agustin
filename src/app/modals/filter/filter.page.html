@@ -1,0 +1,40 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Filtros</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="ion-margin-horizontal">
+    <ion-list-header lines="none" class="ion-no-padding" style="padding-left: 7px;">
+      <ion-label color="medium">Unidades</ion-label>
+    </ion-list-header>
+    <ion-chip class="s-color" *ngFor="let unit of units" (click)="unit.isChecked=!unit.isChecked"
+      [outline]="!unit.isChecked" [class.secondary-color]="unit.isChecked">
+      <ion-label>{{unit.nombre}}</ion-label>
+    </ion-chip>
+  </div>
+  <div class="ion-margin-horizontal">
+    <ion-list-header lines="none" class="ion-no-padding" style="padding-left: 7px;">
+      <ion-label color="medium">Tags</ion-label>
+    </ion-list-header>
+    <ion-chip class="t-color" *ngFor="let tag of tags" (click)="tag.isChecked=!tag.isChecked" [outline]="!tag.isChecked"
+      [class.tertiary-color]="tag.isChecked">
+      <ion-label>{{tag.nombre}}</ion-label>
+    </ion-chip>
+  </div>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()" expand="block" fill="clear">
+        CANCELAR
+      </ion-button>
+      <ion-button (click)="apply()" expand="block" fill="clear">
+        APLICAR
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

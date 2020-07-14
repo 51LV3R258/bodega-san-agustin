@@ -21,12 +21,12 @@ export interface SalePrice {
 export interface Tag {
 	id?: number;
 	nombre?: string;
-	isChecked: boolean;
+	isChecked: boolean | false;
 }
 export interface Unit {
 	id?: number;
 	nombre?: string;
-	isChecked?: boolean;
+	isChecked?: boolean | false;
 }
 
 export interface NewProduct {

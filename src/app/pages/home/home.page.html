@@ -16,7 +16,7 @@
         <ion-icon slot="icon-only" name="search-outline"></ion-icon>
       </ion-button>
       <!-- Botón de filtrado -->
-      <ion-button>
+      <ion-button (click)="openFilterModal()">
         <ion-icon slot="icon-only" name="funnel-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -34,7 +34,8 @@
     </ion-toolbar>
   </ion-header>
 
-  <products-component [products]="products" [noElements]="noElements" noElementsDetail="Empieza a agregarlos">
+  <products-component [products]="products" [noElements]="noElements" noElementsDetail="Empieza a agregarlos"
+    [loading]="loading">
   </products-component>
 </ion-content>
 

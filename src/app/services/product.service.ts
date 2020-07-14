@@ -15,10 +15,10 @@ export class ProductService {
 		if (status != null) {
 			params = params.append('status', status.toString());
 		}
-		if (tags != null) {
+		if (tags != null && tags.length > 0) {
 			params = params.append('tags', `[${tags.toString()}]`);
 		}
-		if (units != null) {
+		if (units != null && units.length > 0) {
 			params = params.append('units', `[${units.toString()}]`);
 		}
 

@@ -42,7 +42,24 @@
         border-radius: 0.8rem;
     }
 
+    .resize-modal-filter .modal-wrapper {
+        height: 90%;
+        margin-left: 2rem;
+        margin-right: 2rem;
+        border-radius: 0.8rem;
+    }
 
+    ion-chip.t-color {
+
+        --color: var(--ion-color-tertiary);
+        border-color: var(--ion-color-tertiary);
+
+        &.tertiary-color {
+            --background: var(--ion-color-tertiary);
+            --color: var(--ion-color-light);
+        }
+
+    }
 }
 
 html.ios {

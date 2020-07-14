@@ -61,8 +61,7 @@ export class AppComponent {
 				}
 			});
 		});
-		await this.unitService.indexAndStore();
-		await this.tagService.indexAndStore();
+		await Promise.all([ this.unitService.indexAndStore(), this.tagService.indexAndStore() ]);
 	}
 
 	checkDarkMode() {

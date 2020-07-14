@@ -109,6 +109,11 @@ export class ProductPage {
 		});
 	}
 
+	ionViewDidLeave() {
+		this.unitService.units$.unsubscribe();
+		this.tagService.tags$.unsubscribe();
+	}
+
 	async openModalSelectSalePrices() {
 		const modal = await this.modalCtrl.create({
 			component: SelectSalePricesPage,

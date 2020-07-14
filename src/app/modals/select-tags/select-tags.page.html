@@ -11,9 +11,9 @@
 
 <ion-content fullscreen>
   <ion-list class="ion-margin">
-    <ion-chip *ngFor="let tag of tags" (click)="toggleTag(tag)" [color]="tag.isChecked ? 'tertiary' : 'dark'">
+    <ion-chip class="t-color" *ngFor="let tag of tags" (click)="toggleTag(tag)" [outline]="!tag.isChecked"
+      [class.tertiary-color]="tag.isChecked">
       <ion-label>{{tag.nombre}}</ion-label>
-      <ion-icon *ngIf="tag.isChecked" name="checkmark-circle"></ion-icon>
     </ion-chip>
   </ion-list>
 </ion-content>
