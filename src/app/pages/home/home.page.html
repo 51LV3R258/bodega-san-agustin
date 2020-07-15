@@ -23,7 +23,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen>
+<ion-content fullscreen [scrollEvents]="true" >
   <ion-refresher slot="fixed" (ionRefresh)="refreshProducts($event)">
     <ion-refresher-content refreshingSpinner="circular">
     </ion-refresher-content>
@@ -37,6 +37,11 @@
   <products-component [products]="products" [noElements]="noElements" noElementsDetail="Empieza a agregarlos"
     [loading]="loading">
   </products-component>
+
+  <ion-infinite-scroll threshold="10%" position="bottom" (ionInfinite)="appendData($event)">
+    <ion-infinite-scroll-content loadingSpinner="crescent" loadingText="Cargando...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
 
 <ion-fab vertical="bottom" horizontal="end" slot="fixed" routerLink="/product">

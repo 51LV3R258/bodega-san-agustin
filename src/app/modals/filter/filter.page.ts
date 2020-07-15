@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { ModalController, IonSelect } from '@ionic/angular';
 import { Tag, Unit } from '../../interfaces/interfaces';
 import { UnitService } from '../../services/unit.service';
 import { TagService } from '../../services/tag.service';
@@ -15,6 +15,9 @@ export class FilterPage implements OnInit {
 	units: Unit[];
 	@Input() tag_ids: number[];
 	@Input() unit_ids: number[];
+	@Input() order_by: string;
+	@ViewChild(IonSelect, { static: true })
+	ionSelect: IonSelect;
 	constructor(public modalCtrl: ModalController, public tagService: TagService, public unitService: UnitService) {
 		this.unitService.load();
 		this.tagService.load();
@@ -29,6 +32,7 @@ export class FilterPage implements OnInit {
 			this.tags = tags;
 			this.initialSelectTags();
 		});
+		this.ionSelect.value = this.order_by;
 	}
 
 	ngOnDestroy() {
@@ -75,7 +79,8 @@ export class FilterPage implements OnInit {
 		this.applySelectUnits();
 		this.applySelectTags();
 		this.modalCtrl.dismiss({
-			refresh: true
+			refresh: true,
+			order_by: this.ionSelect.value.toString()
 		});
 	}
 }

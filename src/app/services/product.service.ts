@@ -9,9 +9,23 @@ const URL = environment.url;
 export class ProductService {
 	constructor(private http: HttpClient) {}
 
-	async index(status?: boolean, tags?: number[], units?: number[]): Promise<{ ok: boolean; products: Product[] }> {
+	page = 0;
+	per_page = 15;
+	async index(
+		status?: boolean,
+		tags?: number[],
+		units?: number[],
+		order_by?: string,
+		refresh?: boolean
+	): Promise<{ ok: boolean; products: Product[] }> {
+		this.page++;
+		if (refresh) {
+			this.page = 1;
+		}
+
 		let headers = new HttpHeaders().set('Content-Type', 'application/json');
 		let params = new HttpParams();
+		params = params.append('per_page', this.per_page.toString()).append('page', this.page.toString());
 		if (status != null) {
 			params = params.append('status', status.toString());
 		}
@@ -21,10 +35,15 @@ export class ProductService {
 		if (units != null && units.length > 0) {
 			params = params.append('units', `[${units.toString()}]`);
 		}
+		if (order_by != null) {
+			params = params.append('order_by', order_by);
+		}
 
 		return new Promise((resolve) => {
 			let ok = false;
-			let products: Product[] = [];
+			let products: SegmentProduct = {
+				data: []
+			};
 			this.http
 				.get(`${URL}/product`, {
 					params: params,
@@ -36,11 +55,11 @@ export class ProductService {
 							products = response['products'];
 							ok = true;
 						}
-						resolve({ ok: ok, products: products });
+						resolve({ ok: ok, products: products.data });
 					},
 					(error) => {
 						console.log(error);
-						resolve({ ok: ok, products: products });
+						resolve({ ok: ok, products: products.data });
 					}
 				);
 		});

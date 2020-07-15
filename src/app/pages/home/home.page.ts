@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../interfaces/interfaces';
-import { ModalController } from '@ionic/angular';
+import { ModalController, IonContent, IonInfiniteScroll } from '@ionic/angular';
 import { FilterPage } from '../../modals/filter/filter.page';
 import { UnitService } from '../../services/unit.service';
 import { TagService } from '../../services/tag.service';
@@ -13,6 +13,9 @@ import { TagService } from '../../services/tag.service';
 	providers: [ ProductService, TagService, UnitService ]
 })
 export class HomePage {
+	@ViewChild(IonContent, { static: false })
+	content: IonContent;
+	@ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 	constructor(
 		private modalCtrl: ModalController,
 		public productService: ProductService,
@@ -23,19 +26,34 @@ export class HomePage {
 	noElements = false;
 
 	async ionViewWillEnter() {
-		await this.getProducts();
+		await this.getProducts(true);
 	}
 	loading = false;
-	async getProducts() {
+	order_by = 'n';
+	async getProducts(refresh?: boolean, event?) {
 		this.loading = true;
-		const { products } = await this.productService.index(null, this.tag_ids, this.unit_ids);
+		const { products } = await this.productService.index(null, this.tag_ids, this.unit_ids, this.order_by, refresh);
+		if (refresh) {
+			this.products.splice(0, this.products.length);
+			this.content.scrollToTop(600);
+			this.enableInfiniteScroll();
+		}
 		this.loading = false;
-		this.products = products;
-		this.noElements = products.length === 0;
+		if (event != null && products.length === 0) {
+			event.target.disabled = true;
+			event.target.complete();
+			return;
+		}
+		this.products.push(...products);
+		this.noElements = this.products.length === 0;
 	}
 
 	async refreshProducts(event) {
-		await Promise.all([ this.getProducts(), this.unitService.indexAndStore(), this.tagService.indexAndStore() ]);
+		await Promise.all([
+			this.getProducts(true),
+			this.unitService.indexAndStore(),
+			this.tagService.indexAndStore()
+		]);
 		event.target.complete();
 	}
 
@@ -49,7 +67,8 @@ export class HomePage {
 			backdropDismiss: false,
 			componentProps: {
 				unit_ids: this.unit_ids,
-				tag_ids: this.tag_ids
+				tag_ids: this.tag_ids,
+				order_by: this.order_by
 			}
 		});
 		await modal.present();
@@ -57,7 +76,18 @@ export class HomePage {
 		const { data } = await modal.onWillDismiss();
 
 		if (data.refresh) {
-			this.getProducts();
+			this.order_by = data.order_by;
+			this.getProducts(true);
 		}
+	}
+	appendData(event) {
+		this.getProducts(false, event);
+		if (event) {
+			event.target.complete();
+		}
+	}
+
+	enableInfiniteScroll() {
+		this.infiniteScroll.disabled = false;
 	}
 }

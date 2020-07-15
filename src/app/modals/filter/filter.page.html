@@ -5,6 +5,15 @@
 </ion-header>
 
 <ion-content>
+  <ion-item lines="none" class="ion-margin ion-no-padding">
+    <ion-label class="ion-text-wrap">Ordenar por</ion-label>
+    <ion-select value="n" interface="popover">
+      <ion-select-option value="n">Nombre</ion-select-option>
+      <ion-select-option value="r">Recientes</ion-select-option>
+      <ion-select-option value="c">Creación</ion-select-option>
+      <ion-select-option value="fmod">Fecha de modificación</ion-select-option>
+    </ion-select>
+  </ion-item>
   <div class="ion-margin-horizontal">
     <ion-list-header lines="none" class="ion-no-padding" style="padding-left: 7px;">
       <ion-label color="medium">Unidades</ion-label>
