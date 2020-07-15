@@ -10,13 +10,14 @@ export class GeneralService {
 	async presentToast(message: string) {
 		const toast = await this.toastCtrl.create({
 			message: message,
-			duration: 2500
+			duration: 2000
 		});
 		toast.present();
 	}
 	async presentLoadingInfinite() {
 		const loading = await this.loadingCtrl.create({
-			message: 'Espere...'
+			message: 'Espere...',
+			duration: 8000 //Cerrar automáticamente si no se cierra
 		});
 		await loading.present();
 	}
@@ -27,7 +28,8 @@ export class GeneralService {
 
 	async presentToastInfinite(message: string) {
 		const toast = await this.toastCtrl.create({
-			message: message
+			message: message,
+			duration: 8000 //Cerrar automáticamente si no se cierra
 		});
 		toast.present();
 	}
