@@ -24,11 +24,11 @@ export class HomePage {
 	) {}
 	products: Product[] = [];
 	noElements = false;
-
+	loading = false;
 	async ionViewWillEnter() {
 		await this.getProducts(true);
 	}
-	loading = false;
+
 	order_by = 'n';
 	async getProducts(refresh?: boolean, event?) {
 		this.loading = true;

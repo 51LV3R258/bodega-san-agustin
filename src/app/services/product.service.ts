@@ -136,28 +136,36 @@ export class ProductService {
 		});
 	}
 
-	async search(query: string): Promise<{ ok: boolean; segment?: SegmentProduct; error?: any }> {
+	searchPage=0;
+	async search(query: string, refresh?: boolean): Promise<{ ok: boolean; products?: Product[]; error?: any }> {
+		this.searchPage++;
+		if (refresh) {
+			this.searchPage = 1;
+		}
 		let headers = new HttpHeaders().set('Content-Type', 'application/json');
-		let params = new HttpParams().set('query', query);
+		let params = new HttpParams().set('query', query).set('page', this.searchPage.toString());
 		return new Promise((resolve) => {
 			let ok = false;
+			let products: SegmentProduct = {
+				data: []
+			};
 			this.http
-				.get(`${URL}/product`, {
+				.get(`${URL}/search/product`, {
 					params: params,
 					headers: headers
 				})
 				.subscribe(
 					async (response) => {
 						if (response['code'] === 200) {
-							const segment: SegmentProduct = response['products'];
+							products = response['products'];
 							ok = true;
-							resolve({ ok: ok, segment: segment });
+							resolve({ ok: ok, products: products.data });
 						}
-						resolve({ ok: ok, error: response['error'] });
+						resolve({ ok: ok, products: products.data, error: 'No se encontró el producto' });
 					},
 					(error) => {
 						console.log(error);
-						resolve({ ok: ok, error: 'Error en la búsqueda' });
+						resolve({ ok: ok, products: products.data, error: 'Error en la búsqueda' });
 					}
 				);
 		});

@@ -1,11 +1,20 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-searchbar cancelButtonIcon="arrow-back-outline" placeholder="Buscar..." animated showCancelButton="always"
-      [spellcheck]="true" (ionCancel)="exit()" debounce="400">
+    <ion-searchbar cancelButtonIcon="arrow-back-outline" placeholder="Buscar..." showCancelButton="always"
+      (ionCancel)="exit()" debounce="400" enterkeyhint="search" (keyup.enter)="searchProduct($event)"
+      (ionChange)="searchProduct()" [(ngModel)]="query">
     </ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content fullscreen [scrollEvents]="true">
+  <products-component [products]="products" [noElements]="noElements" noElementsDetail="Que coincidan con lo buscas"
+    [loading]="loading">
+  </products-component>
 
+
+  <ion-infinite-scroll threshold="10%" position="bottom" (ionInfinite)="appendData($event)">
+    <ion-infinite-scroll-content loadingSpinner="crescent" loadingText="Cargando...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
