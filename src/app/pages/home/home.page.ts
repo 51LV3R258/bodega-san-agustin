@@ -34,8 +34,8 @@ export class HomePage {
 		this.loading = true;
 		const { products } = await this.productService.index(null, this.tag_ids, this.unit_ids, this.order_by, refresh);
 		if (refresh) {
-			this.products.splice(0, this.products.length);
-			this.content.scrollToTop(600);
+			this.products = [];
+			this.content.scrollToTop(800);
 			this.enableInfiniteScroll();
 		}
 		this.loading = false;

@@ -35,8 +35,8 @@ export class SearchProductPage implements OnInit {
 		if (query) {
 			this.loading = true;
 			const { products } = await this.productService.search(query, true);
-			this.products.splice(0, this.products.length);
-			this.content.scrollToTop(600);
+			this.products = [];
+			this.content.scrollToTop(800);
 			this.infiniteScroll.disabled = false;
 			this.loading = false;
 			this.products.push(...products);
