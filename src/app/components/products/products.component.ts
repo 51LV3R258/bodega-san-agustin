@@ -40,4 +40,8 @@ export class ProductsComponent implements OnInit {
 			this.generalService.presentToast(res.error);
 		}
 	}
+
+	mathCeil(n: number) {
+		return Math.ceil(n * 10) / 10;
+	}
 }

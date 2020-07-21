@@ -32,6 +32,7 @@
           <ion-text color="dark">
             <b>Precio de venta x {{sale_price.unit.nombre}}:&nbsp;</b>
             <ng-container *ngIf="sale_price.detalle < 0.1 || sale_price.calculate; else elseTemplate">
+              {{mathCeil(sale_price.detalle) | number:'1.2-2'}},
               {{1/sale_price.detalle | number:'1.0-2'}} x S/.1
             </ng-container>
             <ng-template #elseTemplate> S/.{{sale_price.detalle| number:'1.2-2'}}
