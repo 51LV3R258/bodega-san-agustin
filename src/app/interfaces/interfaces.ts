@@ -16,6 +16,7 @@ export interface SalePrice {
 	product_id?: number;
 	detalle?: number;
 	unit?: Unit;
+	calculate?: boolean;
 }
 
 export interface Tag {

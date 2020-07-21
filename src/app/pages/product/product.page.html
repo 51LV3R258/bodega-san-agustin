@@ -40,10 +40,10 @@
             <ng-container *ngFor="let unit of units">
               <ion-item *ngIf="unit.isChecked">
                 Precio x {{unit.nombre}}:&nbsp;
-                <ng-container *ngIf="priceDetail(unit.id) < 0.1; else elseTemplate">
-                  {{1/priceDetail(unit.id) | number:'1.0-2'}} x S/.1
+                <ng-container *ngIf="priceDetail(unit.id).status; else elseTemplate">
+                  {{1/priceDetail(unit.id).detail | number:'1.0-2'}} x S/.1
                 </ng-container>
-                <ng-template #elseTemplate> S/. {{priceDetail(unit.id)| number:'1.2-2'}}
+                <ng-template #elseTemplate> S/. {{priceDetail(unit.id).detail| number:'1.2-2'}}
                 </ng-template>
 
                 <ion-buttons slot="end">

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChildren, QueryList } from '@angular/core';
-import { ModalController, IonInput } from '@ionic/angular';
+import { ModalController, IonInput, IonCheckbox } from '@ionic/angular';
 import { Unit, NewProduct, SalePrice } from '../../interfaces/interfaces';
 
 @Component({
@@ -11,6 +11,7 @@ export class SelectSalePricesPage implements OnInit {
 	@Input() units: Unit[];
 	@Input() product: NewProduct;
 	@ViewChildren(IonInput) ionInputs: QueryList<IonInput>;
+	@ViewChildren(IonCheckbox) ionCheckboxes: QueryList<IonCheckbox>;
 	constructor(public modalCtrl: ModalController) {}
 
 	ngOnInit() {}
@@ -23,6 +24,12 @@ export class SelectSalePricesPage implements OnInit {
 					break;
 				}
 			}
+			for (const checkbox of this.ionCheckboxes) {
+				if (Number(checkbox.name) == sale_price.unit_id) {
+					checkbox.checked = sale_price.calculate;
+					break;
+				}
+			}
 		});
 	}
 
@@ -32,7 +39,12 @@ export class SelectSalePricesPage implements OnInit {
 		let sale_prices: SalePrice[] = [];
 		this.ionInputs.forEach((ionInput) => {
 			if (Number(ionInput.value) > 0) {
-				sale_prices.push({ unit_id: Number(ionInput.name), detalle: Number(ionInput.value) });
+				const checkbox: IonCheckbox = this.ionCheckboxes.find((check) => check.name == ionInput.name);
+				sale_prices.push({
+					unit_id: Number(ionInput.name),
+					detalle: Number(ionInput.value),
+					calculate: checkbox.checked
+				});
 			} else {
 				this.disableUnit(Number(ionInput.name));
 			}

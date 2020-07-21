@@ -31,7 +31,7 @@
         <ion-item *ngFor="let sale_price of product.sale_prices" lines='full' class="ion-text-center">
           <ion-text color="dark">
             <b>Precio de venta x {{sale_price.unit.nombre}}:&nbsp;</b>
-            <ng-container *ngIf="sale_price.detalle < 0.1; else elseTemplate">
+            <ng-container *ngIf="sale_price.detalle < 0.1 || sale_price.calculate; else elseTemplate">
               {{1/sale_price.detalle | number:'1.0-2'}} x S/.1
             </ng-container>
             <ng-template #elseTemplate> S/.{{sale_price.detalle| number:'1.2-2'}}

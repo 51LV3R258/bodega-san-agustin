@@ -77,7 +77,8 @@ export class ProductPage {
 			sale_prices: productToUpdate.sale_prices.map((sale_prices) => {
 				return {
 					unit_id: sale_prices.unit.id,
-					detalle: sale_prices.detalle
+					detalle: sale_prices.detalle,
+					calculate: sale_prices.calculate
 				};
 			}),
 			tag_ids: productToUpdate.tags.map((tag) => tag.id),
@@ -193,12 +194,12 @@ export class ProductPage {
 		subHeader: 'Selecciona las unidades de costo'
 	};
 
-	priceDetail(unit_id: number) {
+	priceDetail(unit_id: number): { status: boolean; detail: number } {
 		const sale_price = this.product.sale_prices.find((sale_price) => sale_price.unit_id === unit_id);
 		if (sale_price) {
-			return sale_price.detalle;
+			return { status: sale_price.detalle < 0.1 || sale_price.calculate, detail: sale_price.detalle };
 		}
-		return null;
+		return { status: false, detail: 0 };
 	}
 
 	removeUnit(unit: Unit) {
