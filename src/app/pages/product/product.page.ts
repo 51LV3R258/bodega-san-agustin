@@ -25,7 +25,7 @@ export class ProductPage {
 	isWillUpdate = false;
 	product_id = null;
 
-	storeProduct() {
+	toStoreProduct() {
 		this.prices = [];
 		this.product = {
 			nombre: '',
@@ -50,19 +50,19 @@ export class ProductPage {
 		private generalService: GeneralService,
 		private route: ActivatedRoute
 	) {
-		this.storeProduct();
+		this.toStoreProduct();
 		this.unitService.load();
 		this.tagService.load();
 		this.route.queryParams.subscribe(async () => {
 			if (this.router.getCurrentNavigation().extras.state) {
 				const { product } = this.router.getCurrentNavigation().extras.state;
 				this.isWillUpdate = true;
-				this.updateProduct(product);
+				this.toUpdateProduct(product);
 			}
 		});
 	}
 
-	updateProduct(productToUpdate: Product) {
+	toUpdateProduct(productToUpdate: Product) {
 		this.product_id = productToUpdate.id;
 
 		let unit_id = null;
