@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-searchbar cancelButtonIcon="arrow-back-outline" placeholder="Buscar..." showCancelButton="always"
-      (ionCancel)="exit()" debounce="400" enterkeyhint="search" (keyup.enter)="searchProduct($event)"
+      (ionCancel)="exit()" debounce="500" enterkeyhint="search" (keyup.enter)="searchProduct($event)"
       (ionChange)="searchProduct()" [(ngModel)]="query">
     </ion-searchbar>
   </ion-toolbar>
