@@ -1,8 +1,8 @@
 <ion-header translucent class="ion-no-border">
   <ion-toolbar>
-    <!-- Futuro menu? -->
+    <!--Botón Menu -->
     <ion-buttons slot="start">
-      <ion-button color="primary">
+      <ion-button color="primary" (click)="openMenu()">
         <ion-icon slot="icon-only" name="menu-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -22,8 +22,23 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
-<ion-content fullscreen [scrollEvents]="true" >
+<!-- Menu -->
+<ion-menu side="start" menuId="first" contentId="main" type="overlay">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+      <ion-item button lines="full">
+        <ion-icon color="dark" slot="start" name="pricetag" style="margin-right: 16px;"></ion-icon> Gestionar Tags
+      </ion-item>
+      <ion-item button lines="full">
+        <ion-icon color="dark" slot="start" name="cash" style="margin-right: 16px;"></ion-icon>Gestionar Unidades
+      </ion-item>
+  </ion-content>
+</ion-menu>
+<ion-content fullscreen [scrollEvents]="true" id="main">
   <ion-refresher slot="fixed" (ionRefresh)="refreshProducts($event)">
     <ion-refresher-content refreshingSpinner="circular">
     </ion-refresher-content>

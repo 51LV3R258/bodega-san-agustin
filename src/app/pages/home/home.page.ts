@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../interfaces/interfaces';
-import { ModalController, IonContent, IonInfiniteScroll } from '@ionic/angular';
+import { ModalController, IonContent, IonInfiniteScroll, MenuController } from '@ionic/angular';
 import { FilterPage } from '../../modals/filter/filter.page';
 import { UnitService } from '../../services/unit.service';
 import { TagService } from '../../services/tag.service';
@@ -20,7 +20,8 @@ export class HomePage {
 		private modalCtrl: ModalController,
 		public productService: ProductService,
 		private tagService: TagService,
-		private unitService: UnitService
+		private unitService: UnitService,
+		private menu: MenuController
 	) {}
 	products: Product[] = [];
 	noElements = false;
@@ -89,5 +90,10 @@ export class HomePage {
 
 	enableInfiniteScroll() {
 		this.infiniteScroll.disabled = false;
+	}
+
+	openMenu() {
+		this.menu.enable(true, 'first');
+		this.menu.open('first');
 	}
 }
