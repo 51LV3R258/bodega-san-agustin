@@ -81,8 +81,8 @@ export class HomePage {
 			this.getProducts(true);
 		}
 	}
-	appendData(event) {
-		this.getProducts(false, event);
+	async appendData(event) {
+		await this.getProducts(false, event);
 		if (event) {
 			event.target.complete();
 		}
