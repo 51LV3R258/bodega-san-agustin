@@ -66,26 +66,18 @@ export class AppComponent {
 
 	checkDarkMode() {
 		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-		let dark = false;
+		let dark = prefersDark.matches;
 		if (window.navigator.userAgent.includes('AndroidDarkMode')) {
 			dark = true;
-		} else {
-			dark = prefersDark.matches;
 		}
 		if (dark) {
 			document.body.classList.add('dark');
-			StatusBar.setBackgroundColor({
-				color: '#000000'
-			}).catch((error) => {
-				// console.warn(error);
-			});
-		} else {
-			StatusBar.setBackgroundColor({
-				color: '#ffffff'
-			}).catch((error) => {
-				// console.warn(error);
-			});
 		}
+		StatusBar.setBackgroundColor({
+			color: dark ? '#000000' : '#ffffff'
+		}).catch((error) => {
+			// console.warn(error);
+		});
 
 		StatusBar.setStyle({
 			style: dark ? StatusBarStyle.Dark : StatusBarStyle.Light
